@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="info-item"><i class="far fa-calendar-alt"></i><div><span>Waktu</span><br><strong>${quake.Tanggal} ${quake.Jam}</strong></div></div>
                         <div class="info-item"><i class="fas fa-ruler-vertical"></i><div><span>Kedalaman</span><br><strong>${quake.Kedalaman}</strong></div></div>
                         <div class="info-item"><i class="fas fa-map-marker-alt"></i><div><span>Koordinat</span><br><strong>${quake.Coordinates}</strong></div></div>
-                        <div class="info-item"><i class="fas fa-water"></i><div><span>Potensi</span><br><strong>${quake.Potensi}</strong></div></div>
+                        <div class="info-item"><i class="fas fa-water"></i><div><span>Potensi</span><br><strong>${quake.Potensi || "Dalam Peninjauan"}</strong></div></div>
                     </div>
                     <div class="action-buttons">
                         <button id="view-json-btn" class="header-btn action-btn"><i class="fas fa-code"></i> Lihat JSON</button>
@@ -153,7 +153,7 @@ Lokasi : *${quake.Wilayah}*
 Waktu : ${quake.Tanggal} | ${quake.Jam}
 Kedalaman : ${quake.Kedalaman}
 Koordinat : ${quake.Coordinates}
-Potensi : *${quake.Potensi}*
+Potensi : *${quake.Potensi || "Dalam Peninjauan"}*
 
 Sumber: BMKG
 Info lebih detail: ${window.location.href}
