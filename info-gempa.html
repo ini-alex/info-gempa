@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Info Gempa</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loading" class="loading-overlay">
+    <i class="fas fa-spinner fa-spin"></i>
+  </div>
+
+  <header>
+    <a href="index.html" class="logo">Pusat Info Gempa</a>
+    <div class="header-actions">
+        <a href="index.html" class="header-btn"><i class="fas fa-arrow-left"></i> Kembali</a>
+        <button id="theme-toggle" class="header-btn theme-toggle">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </div>
+  </header>
+  
+  <main id="quake-detail-container" class="container">
+    </main>
+
+  <div id="json-modal" class="modal-overlay">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2>Data JSON Gempa</h2>
+              <button id="close-modal-json" class="close-btn">&times;</button>
+          </div>
+          <pre id="json-content-pre"></pre>
+      </div>
+  </div>
+  
+  <div id="text-modal" class="modal-overlay">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2>Info Teks Siap Dibagikan</h2>
+              <button id="close-modal-text" class="close-btn">&times;</button>
+          </div>
+          <textarea id="generated-text-area" readonly></textarea>
+          <div class="modal-actions">
+              <button id="copy-text-btn" class="header-btn action-btn"><i class="fas fa-copy"></i> Salin Teks</button>
+              <button id="share-text-btn" class="header-btn action-btn primary"><i class="fas fa-share-alt"></i> Bagikan</button>
+          </div>
+      </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="script.js"></script>
+</body>
+</html>
