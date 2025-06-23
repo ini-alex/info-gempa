@@ -178,7 +178,7 @@ Info gempa lain: https://update-gempa.vercel.app
                 navigator.share({
                     title: 'Info Gempa Bumi',
                     text: generatedTextArea.value,
-                    url: window.location.href
+                    
                 }).catch(console.error);
             } else {
                 alert('Fitur "Bagikan" hanya didukung di browser mobile (HP). Silakan salin teks secara manual.');
