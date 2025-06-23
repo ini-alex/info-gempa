@@ -157,6 +157,7 @@ Potensi : *${quake.Potensi}*
 
 Sumber: BMKG
 Info lebih detail: ${window.location.href}
+Info gempa lain: https://update-gempa.vercel.app
             `.trim();
 
             generatedTextArea.value = generatedText;
