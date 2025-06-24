@@ -17,4 +17,18 @@
 - API Source: data.bmkg.go.id (public API)
 - Hosting: Vercel
 
+## 📝 Lisensi
+
+Proyek ini dilisensikan di bawah [GNU General Public License v3.0](LICENSE).
+
+🛡️ **Seluruh isi kode dalam repositori ini dilindungi oleh lisensi GPL-3.0. ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)**  
+Kamu bebas untuk menggunakan, memodifikasi, dan mendistribusikan ulang kode ini, **selama tetap mematuhi ketentuan lisensi** berikut:
+
+- ✅ Tetap mencantumkan nama pembuat asli
+- ✅ Membagikan perubahan kode secara open source
+- ❌ Tidak mengubah proyek ini menjadi close-source
+- ❌ Tidak menjual versi modifikasi tanpa menyertakan lisensi yang sama
+
+Gunakan dengan bijak, hargai karya orang lain. 💻✨
+
 > Proyek ini dibuat dengan fokus pada kecepatan, kejelasan informasi, dan kemudahan akses oleh publik secara luas.
