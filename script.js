@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_URL = 'https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json';
+    const API_URL = 'https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json';
     const loadingEl = document.getElementById('loading');
     const themeToggle = document.getElementById('theme-toggle');
 
