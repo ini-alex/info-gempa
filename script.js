@@ -280,9 +280,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render Peta
         const [lat, lon] = quake.Coordinates.split(',');
         const map = L.map('map').setView([parseFloat(lat), parseFloat(lon)], 7);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        
+        // --- Ini dia Tracestrack Topo langsung dari tracestrack.com ---
+        // PENTING: Ganti <YOUR_TRACESTRACK_API_KEY> dengan API Key lu dari tracestrack.com!
+        L.tileLayer('https://tile.tracestrack.com/_/{z}/{x}/{y}{r}.png?key=23e696ed47dbaf25e98eb71af1267941', {
+            attribution: 'Data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM, GEBCO, SONNY\'s LiDAR DTM, NASADEM, ESA WorldCover; Maps &copy; <a href="https://www.tracestrack.com/">Tracestrack</a>.',
+            maxZoom: 18 // Sesuaikan maxZoom jika diperlukan oleh Tracestrack
         }).addTo(map);
+        // ----------------------------------------------------------------------
+
         L.marker([parseFloat(lat), parseFloat(lon)]).addTo(map)
             .bindPopup(`<b>${quake.Magnitude} M</b><br>${quake.Wilayah}`)
             .openPopup();
@@ -334,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await navigator.share({
                         title: `Info Gempa ${quake.Magnitude} M di ${quake.Wilayah}`,
                         text: generateQuakeInfoText(quake),
+                        url: window.location.href // Bagikan link halaman ini
                     });
                     console.log('Konten berhasil dibagikan');
                 } catch (error) {
@@ -347,19 +354,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateQuakeInfoText(quake) {
         return `
-INFO GEMPA TERKINI
+        INFO GEMPA TERKINI
 
-Lokasi : ${quake.Wilayah}
-Waktu : ${quake.Tanggal} ${quake.Jam}
-Koordinat : ${quake.Coordinates}
-Titik Gempa : https://maps.google.com/maps?q=${quake.Coordinates}
-Kedalaman : ${quake.Kedalaman}
-Magnitude : ${quake.Magnitude} M
-Potensi : ${quake.Potensi}
+Lokasi: *${quake.Wilayah}*
+Waktu: *${quake.Tanggal} ${quake.Jam} WIB*
+Koordinat: *${quake.Coordinates}*
+Titik Gempa: *https://maps.google.com/maps?q=${quake.Coordinates}*
+Kedalaman: *${quake.Kedalaman}*
+Magnitude: *${quake.Magnitude} M*
+Potensi: *${quake.Potensi}*
 
-Sumber : BMKG Indonesia
-Detail : ${window.location.href}
-Info lainnya : https://update-gempa.vercel.app
+Sumber: *BMKG Indonesia*
+Detail: *${window.location.href}*
+Info lainnya: *https://update-gempa.vercel.app*
 `.trim(); // .trim() buat ngilangin spasi di awal/akhir
     }
 });
