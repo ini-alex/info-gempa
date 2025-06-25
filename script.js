@@ -6,10 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadingEl = document.getElementById('loading');
 
+    // Variabel global untuk instance map dan data gempa di halaman detail
+    let currentMapInstance = null;
+    let currentQuakeData = null;
+
     // --- LOGIKA TOGGLE THEME (Berlaku untuk semua halaman) ---
     const themeToggle = document.getElementById('theme-toggle');
     const applyTheme = (theme) => {
         document.documentElement.setAttribute('data-theme', theme);
+        // Kalau kita di halaman detail gempa, update juga tile map-nya
+        if (document.getElementById('quake-detail-container') && currentMapInstance && currentQuakeData) {
+            updateMapTileLayer(theme);
+        }
     };
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -17,18 +25,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     themeToggle.addEventListener('click', () => {
         let currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? null : 'dark';
+        const newTheme = currentTheme === 'dark' ? null : 'dark'; // Toggle ke light (null) atau dark
         if (newTheme) {
             applyTheme(newTheme);
             localStorage.setItem('theme', newTheme);
         } else {
-            document.documentElement.removeAttribute('data-theme');
+            document.documentElement.removeAttribute('data-theme'); // Hapus atribut untuk kembali ke light default
             localStorage.removeItem('theme');
+            applyTheme(null); // Terapkan tema light
         }
     });
 
+    // --- FUNGSI UNTUK MENGGANTI TILE LAYER MAP SAAT TEMA BERUBAH ---
+    function updateMapTileLayer(theme) {
+        if (!currentMapInstance || !currentQuakeData) return;
+
+        let tileUrl, attributionText;
+
+        // Pilih tile layer berdasarkan tema
+        if (theme === 'dark') {
+            tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+            attributionText = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CartoDB</a>';
+        } else { // light theme atau default
+            tileUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+            attributionText = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CartoDB</a>';
+        }
+
+        // Hapus tile layer yang lama (jika ada)
+        currentMapInstance.eachLayer(function(layer) {
+            if (layer instanceof L.TileLayer) {
+                currentMapInstance.removeLayer(layer);
+            }
+        });
+
+        // Tambahkan tile layer yang baru
+        L.tileLayer(tileUrl, { attribution: attributionText }).addTo(currentMapInstance);
+    }
+
     // --- Cek halaman mana yang sedang aktif untuk menjalankan fungsi yang sesuai ---
-    // Pastikan ID elemennya ada di halaman tersebut
     if (document.getElementById('latest-quake-card') || document.getElementById('felt-quakes-list-container')) {
         initIndexPage();
         setupCollapsibles(); // Panggil fungsi setup collapsible hanya di index.html
@@ -50,10 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     content.classList.remove('active');
                     icon.classList.remove('active');
                 } else {
-                    // Tutup semua konten lain yang sedang terbuka (opsional, bisa dihapus kalau mau beberapa terbuka)
                     document.querySelectorAll('.collapsible-content.active').forEach(openContent => {
                         openContent.classList.remove('active');
-                        // Cari ikon yang sesuai untuk header konten yang ditutup
                         const correspondingHeader = document.querySelector(`[data-target="${openContent.id}"]`);
                         if (correspondingHeader) {
                             const correspondingIcon = correspondingHeader.querySelector('.chevron-icon');
@@ -84,10 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch(API_URL_AUTOGEMPA)
             ]);
 
-            // Handle Gempa Terbaru (Autogempa)
             if (responseAutogempa.ok) {
                 const dataAutogempa = await responseAutogempa.json();
-                const latestQuake = dataAutogempa.Infogempa.gempa; // Ini udah objek langsung
+                const latestQuake = dataAutogempa.Infogempa.gempa;
                 if (latestQuake) {
                     renderLatestQuakeCard(latestQuake, latestQuakeCard);
                 } else {
@@ -97,19 +128,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 latestQuakeCard.innerHTML = `<p class="loading-text">Gagal memuat gempa terbaru. (${responseAutogempa.status})</p>`;
             }
             
-            // Handle 15 Gempa Terakhir Dirasakan
             if (responseDirasakan.ok) {
                 const dataDirasakan = await responseDirasakan.json();
-                const feltEarthquakes = dataDirasakan.Infogempa.gempa.slice(0, 15); // Ambil 15 terakhir
+                const feltEarthquakes = dataDirasakan.Infogempa.gempa.slice(0, 15);
                 renderQuakeList(feltEarthquakes, feltQuakesContainer);
             } else {
                 feltQuakesContainer.innerHTML = `<p class="loading-text">Gagal memuat daftar gempa dirasakan. (${responseDirasakan.status})</p>`;
             }
 
-            // Handle 15 Gempa Terkini (Magnitudo >5)
             if (responseTerkini.ok) {
                 const dataTerkini = await responseTerkini.json();
-                const majorEarthquakes = dataTerkini.Infogempa.gempa.slice(0, 15); // Ambil 15 terakhir
+                const majorEarthquakes = dataTerkini.Infogempa.gempa.slice(0, 15);
                 renderQuakeList(majorEarthquakes, recentMajorQuakesContainer);
             } else {
                 recentMajorQuakesContainer.innerHTML = `<p class="loading-text">Gagal memuat daftar gempa terkini. (${responseTerkini.status})</p>`;
@@ -117,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching earthquake data:', error);
-            // Tampilkan pesan error di semua kontainer jika ada error umum
             latestQuakeCard.innerHTML = `<p class="loading-text">Gagal memuat data gempa: ${error.message}</p>`;
             feltQuakesContainer.innerHTML = `<p class="loading-text">Gagal memuat data gempa: ${error.message}</p>`;
             recentMajorQuakesContainer.innerHTML = `<p class="loading-text">Gagal memuat data gempa: ${error.message}</p>`;
@@ -126,9 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Helper function untuk merender daftar gempa (digunakan oleh felt & major quakes)
     function renderQuakeList(quakes, container) {
-        container.innerHTML = ''; // Kosongkan dulu
+        container.innerHTML = '';
         if (quakes.length === 0) {
             container.innerHTML = `<p class="loading-text">Tidak ada data gempa untuk ditampilkan.</p>`;
             return;
@@ -136,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         quakes.forEach(quake => {
             const item = document.createElement('a');
             item.className = 'history-item';
-            // PENTING: Menggunakan encodeURIComponent untuk DateTime
             item.href = `info-gempa.html?id=${encodeURIComponent(quake.DateTime)}`; 
             item.innerHTML = `
                 <div class="mag">${quake.Magnitude} M</div>
@@ -149,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Helper function untuk merender kartu gempa terbaru (autogempa)
     function renderLatestQuakeCard(quake, container) {
         container.innerHTML = `
             <div class="card-content">
@@ -159,22 +184,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong>Lokasi:</strong> ${quake.Wilayah}</p>
                     <p><strong>Kedalaman:</strong> ${quake.Kedalaman}</p>
                     <p><strong>Koordinat:</strong> ${quake.Coordinates}</p>
-                    <p><strong>Potensi Tsunami:</strong> ${quake.Potensi}</p>
+                    <p><strong>Potensi Tsunami:</strong> ${quake.Potensi || "Belum Ditentukan"}</p>
                 </div>
             </div>
             <a href="info-gempa.html?id=${encodeURIComponent(quake.DateTime)}" class="view-detail-btn">Lihat Detail & Map <i class="fas fa-arrow-right"></i></a>
         `;
     }
     
-    // --- FUNGSI-FUNGSI UNTUK HALAMAN DETAIL (info-gempa.html) ---
     async function initDetailPage() {
         loadingEl.style.display = 'flex';
         const detailContainer = document.getElementById('quake-detail-container');
         const params = new URLSearchParams(window.location.search);
-        const quakeIdEncoded = params.get('id'); // ID yang masih di-encode
+        const quakeIdEncoded = params.get('id'); 
 
         try {
-            // Kita coba fetch dari semua sumber untuk memastikan data ditemukan
             const [responseDirasakan, responseTerkini, responseAutogempa] = await Promise.all([
                 fetch(API_URL_GEMPA_DIRASAKAN),
                 fetch(API_URL_GEMPA_TERKINI),
@@ -182,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ]);
 
             let allEarthquakes = [];
-            // Gabungkan data dari semua API
             if (responseDirasakan.ok) {
                 const dataDirasakan = await responseDirasakan.json();
                 allEarthquakes = allEarthquakes.concat(dataDirasakan.Infogempa.gempa || []);
@@ -193,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (responseAutogempa.ok) { 
                 const dataAutogempa = await responseAutogempa.json();
-                // autogempa.json kadang langsung objek gempa, kadang array 1 elemen
                 if (Array.isArray(dataAutogempa.Infogempa.gempa)) {
                     allEarthquakes = allEarthquakes.concat(dataAutogempa.Infogempa.gempa);
                 } else if (dataAutogempa.Infogempa.gempa) {
@@ -201,26 +222,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            // Filter duplikat berdasarkan DateTime
-            // Menggunakan Map untuk memastikan keunikan berdasarkan DateTime
             const uniqueEarthquakesMap = new Map();
             allEarthquakes.forEach(item => {
-                if (item.DateTime) { // Pastikan DateTime ada
+                if (item.DateTime) { 
                     uniqueEarthquakesMap.set(item.DateTime, item);
                 }
             });
             const uniqueEarthquakes = Array.from(uniqueEarthquakesMap.values());
             
-            // Decode ID dari URL
-            const decodedQuakeDateTime = decodeURIComponent(quakeIdEncoded || ''); // Handle jika ID kosong
+            const decodedQuakeDateTime = decodeURIComponent(quakeIdEncoded || ''); 
 
             let quakeToShow = null;
             if (decodedQuakeDateTime) {
-                // Cari gempa berdasarkan decoded DateTime
                 quakeToShow = uniqueEarthquakes.find(q => q.DateTime === decodedQuakeDateTime);
             } else {
-                // Jika tidak ada ID di URL, tampilkan gempa terbaru dari autogempa (jika ada)
-                // Ini akan jadi default behavior jika user langsung buka info-gempa.html tanpa ID
                 const autoGempaRes = await fetch(API_URL_AUTOGEMPA);
                 if(autoGempaRes.ok) {
                     const autoGempaData = await autoGempaRes.json();
@@ -231,7 +246,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (quakeToShow) {
-                 renderDetailContent(quakeToShow);
+                 currentQuakeData = quakeToShow; // Simpan data gempa yang sedang ditampilkan
+                 renderDetailContent(quakeToShow); // Render pertama kali dengan tema saat ini
+                 
+                 // Inisialisasi map instance setelah render HTML awal
+                 const [lat, lon] = quakeToShow.Coordinates.split(',');
+                 // Pastikan map belum diinisialisasi untuk menghindari error "Map container is already initialized"
+                 if (currentMapInstance) { 
+                     currentMapInstance.remove(); // Hapus instance map lama jika ada
+                 }
+                 currentMapInstance = L.map('map').setView([parseFloat(lat), parseFloat(lon)], 7);
+                 
+                 // Terapkan tile layer awal sesuai tema saat ini
+                 const initialTheme = document.documentElement.getAttribute('data-theme');
+                 updateMapTileLayer(initialTheme); // Panggil untuk set tile layer awal
+                 
+                 // Tambahkan marker ke map yang sudah diinisialisasi
+                 L.marker([parseFloat(lat), parseFloat(lon)]).addTo(currentMapInstance)
+                     .bindPopup(`<b>${quakeToShow.Magnitude} M</b><br>${quakeToShow.Wilayah}`)
+                     .openPopup();
+
             } else {
                  detailContainer.innerHTML = `<p class="loading-text">Data gempa tidak ditemukan untuk ID ini atau terjadi kesalahan saat memuat.</p>`;
                  console.warn("Could not find earthquake with DateTime:", decodedQuakeDateTime);
@@ -277,22 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        // Render Peta
-        const [lat, lon] = quake.Coordinates.split(',');
-        const map = L.map('map').setView([parseFloat(lat), parseFloat(lon)], 7);
-        
-        // --- Ini dia Tracestrack Topo langsung dari tracestrack.com ---
-        // PENTING: Ganti <YOUR_TRACESTRACK_API_KEY> dengan API Key lu dari tracestrack.com!
-        L.tileLayer('https://tile.tracestrack.com/_/{z}/{x}/{y}{r}.png?key=23e696ed47dbaf25e98eb71af1267941', {
-            attribution: 'Data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM, GEBCO, SONNY\'s LiDAR DTM, NASADEM, ESA WorldCover; Maps &copy; <a href="https://www.tracestrack.com/">Tracestrack</a>.',
-            maxZoom: 18 // Sesuaikan maxZoom jika diperlukan oleh Tracestrack
-        }).addTo(map);
-        // ----------------------------------------------------------------------
-
-        L.marker([parseFloat(lat), parseFloat(lon)]).addTo(map)
-            .bindPopup(`<b>${quake.Magnitude} M</b><br>${quake.Wilayah}`)
-            .openPopup();
-
         // --- Logic untuk Generate Info Text, Copy, dan Share ---
         const generateBtn = document.getElementById('generate-info-btn');
         const outputBox = document.getElementById('generated-text-output');
@@ -305,15 +323,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const infoText = generateQuakeInfoText(quake);
             textArea.value = infoText;
             
-            // Langsung set display block, lalu kasih delay sedikit untuk animasi
             outputBox.style.display = 'block'; 
-            // Menggunakan requestAnimationFrame untuk memastikan display block sudah diterapkan
-            // sebelum transisi dipicu
             requestAnimationFrame(() => {
                 outputBox.classList.add('show'); 
             });
             
-            generateBtn.style.display = 'none'; // Sembunyikan tombol generate setelah diklik
+            generateBtn.style.display = 'none'; 
             textArea.focus();
             textArea.select();
         });
@@ -330,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 setTimeout(() => {
                     copyFeedback.textContent = '';
-                }, 3000); // Hapus pesan setelah 3 detik
+                }, 3000); 
             }
         });
 
@@ -340,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await navigator.share({
                         title: `Info Gempa ${quake.Magnitude} M di ${quake.Wilayah}`,
                         text: generateQuakeInfoText(quake),
-                        url: window.location.href // Bagikan link halaman ini
+                        url: window.location.href 
                     });
                     console.log('Konten berhasil dibagikan');
                 } catch (error) {
@@ -352,21 +367,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Fungsi generateQuakeInfoText dengan format baru
     function generateQuakeInfoText(quake) {
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${quake.Coordinates}`;
         return `
-        INFO GEMPA TERKINI
+INFO GEMPA TERKINI
 
 Lokasi: *${quake.Wilayah}*
 Waktu: *${quake.Tanggal} ${quake.Jam} WIB*
 Koordinat: *${quake.Coordinates}*
-Titik Gempa: *https://maps.google.com/maps?q=${quake.Coordinates}*
+Titik Gempa: *${googleMapsUrl}*
 Kedalaman: *${quake.Kedalaman}*
 Magnitude: *${quake.Magnitude} M*
-Potensi: *${quake.Potensi}*
+Potensi: *${quake.Potensi || "Belum Ditentukan"}*
 
 Sumber: *BMKG Indonesia*
 Detail: *${window.location.href}*
 Info lainnya: *https://update-gempa.vercel.app*
-`.trim(); // .trim() buat ngilangin spasi di awal/akhir
+`.trim();
     }
 });
