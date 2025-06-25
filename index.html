@@ -34,9 +34,37 @@
             <p>Menyajikan data gempa bumi terkini yang dirasakan di seluruh wilayah Indonesia, langsung dari sumber terpercaya BMKG.</p>
         </section>
 
-        <h2 class="page-title">Riwayat 15 Gempa Terkini</h2>
-        <div id="history-list-container" class="history-list">
-            <!-- Daftar riwayat link akan di-render di sini oleh JS -->
+        
+
+        <h2 class="page-title toggle-header" data-target="latest-quake-content">
+            Gempa Terbaru <i class="fas fa-chevron-down chevron-icon active"></i>
+        </h2>
+        <div id="latest-quake-content" class="collapsible-content active">
+            <div id="latest-quake-card" class="latest-quake-card">
+                <p class="loading-text">Memuat data gempa terbaru...</p>
+            </div>
+        </div>
+
+        
+
+        <h2 class="page-title toggle-header" data-target="felt-quakes-content">
+            15 Gempa Terakhir Dirasakan <i class="fas fa-chevron-down chevron-icon"></i>
+        </h2>
+        <div id="felt-quakes-content" class="collapsible-content">
+            <div id="felt-quakes-list-container" class="history-list">
+                <p class="loading-text">Memuat daftar gempa dirasakan...</p>
+            </div>
+        </div>
+
+        
+
+        <h2 class="page-title toggle-header" data-target="recent-major-quakes-content">
+            15 Gempa Terkini (Magnitudo &ge; 5.0) <i class="fas fa-chevron-down chevron-icon"></i>
+        </h2>
+        <div id="recent-major-quakes-content" class="collapsible-content">
+            <div id="recent-major-quakes-list-container" class="history-list">
+                <p class="loading-text">Memuat daftar gempa terkini...</p>
+            </div>
         </div>
     </main>
 
