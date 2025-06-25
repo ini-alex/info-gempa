@@ -347,18 +347,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateQuakeInfoText(quake) {
         return `
-🚨 INFO GEMPA TERKINI 🚨
+INFO GEMPA TERKINI
 
-Magnitude: ${quake.Magnitude} M
-Waktu: ${quake.Tanggal} ${quake.Jam} WIB
-Lokasi: ${quake.Wilayah}
-Kedalaman: ${quake.Kedalaman}
-Koordinat: ${quake.Coordinates}
-Potensi: ${quake.Potensi}
+Lokasi        : ${quake.Wilayah}
+Waktu         : ${quake.Tanggal} ${quake.Jam} WIB
+Koordinat     : ${quake.Coordinates}
+Titik Gempa   : https://maps.google.com/maps?q=${quake.Coordinates}
+Kedalaman     : ${quake.Kedalaman}
+Magnitude     : ${quake.Magnitude} M
+Potensi       : ${quake.Potensi}
 
-Sumber: BMKG Indonesia
-Detail lebih lanjut: ${window.location.href}
-Info gempa lain: https://update-gempa.vercel.app
+Sumber        : BMKG Indonesia
+Detail        : ${window.location.href}
+Info lainnya  : https://update-gempa.vercel.app
 `.trim(); // .trim() buat ngilangin spasi di awal/akhir
     }
 });
