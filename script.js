@@ -354,8 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     await navigator.share({
                         title: `Info Gempa ${quake.Magnitude} M di ${quake.Wilayah}`,
-                        text: generateQuakeInfoText(quake),
-                        url: window.location.href 
+                        text: generateQuakeInfoText(quake) 
                     });
                     console.log('Konten berhasil dibagikan');
                 } catch (error) {
