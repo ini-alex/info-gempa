@@ -20,7 +20,6 @@ html[data-theme='dark'] {
   --shadow-color: rgba(0,0,0,0.2);
 }
 
-/* --- Global Styles --- */
 * { 
     margin: 0; 
     padding: 0; 
@@ -42,7 +41,6 @@ html, body {
     padding: 1.5rem; 
 }
 
-/* --- Header --- */
 header {
   background-color: var(--surface-color);
   padding: 1rem 1.5rem;
@@ -88,13 +86,22 @@ header .logo {
     border-color: var(--primary-color); 
 }
 
-/* Theme Toggle specifics */
-.theme-toggle .fa-sun { display: none; }
-.theme-toggle .fa-moon { display: block; }
-html[data-theme='dark'] .theme-toggle .fa-sun { display: block; }
-html[data-theme='dark'] .theme-toggle .fa-moon { display: none; }
+.theme-toggle .fa-sun { 
+    display: none; 
+}
 
-/* --- Hero Section --- */
+.theme-toggle .fa-moon { 
+    display: block; 
+}
+
+html[data-theme='dark'] .theme-toggle .fa-sun { 
+    display: block; 
+}
+
+html[data-theme='dark'] .theme-toggle .fa-moon { 
+    display: none; 
+}
+
 .hero-section { 
     text-align: center; 
     padding: 2rem 0; 
@@ -113,7 +120,6 @@ html[data-theme='dark'] .theme-toggle .fa-moon { display: none; }
     margin: auto; 
 }
 
-/* --- Page Titles --- */
 .page-title {
     font-size: 1.8rem; 
     margin: 2rem 0 1.5rem;
@@ -122,7 +128,6 @@ html[data-theme='dark'] .theme-toggle .fa-moon { display: none; }
     display: inline-block;
 }
 
-/* --- History List --- */
 .history-list { 
     display: flex; 
     flex-direction: column; 
@@ -157,11 +162,19 @@ a.history-item:hover {
     text-align: center; 
 }
 
-.history-item .details { flex-grow: 1; }
-.history-item .loc { font-weight: 500; }
-.history-item .time { font-size: 0.8rem; color: var(--text-muted); }
+.history-item .details { 
+    flex-grow: 1; 
+}
 
-/* --- Detail Page Layout --- */
+.history-item .loc { 
+    font-weight: 500; 
+}
+
+.history-item .time { 
+    font-size: 0.8rem; 
+    color: var(--text-muted); 
+}
+
 .detail-grid { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -192,6 +205,12 @@ a.history-item:hover {
     line-height: 1; 
 }
 
+.featured-info .location { 
+    font-size: 1.25rem; 
+    font-weight: 500; 
+    margin: 0.5rem 0; 
+}
+
 .info-grid {
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -201,7 +220,54 @@ a.history-item:hover {
     padding-top: 1.5rem;
 }
 
-/* --- Action Section --- */
+.info-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.75rem; 
+}
+
+.info-item i { 
+    font-size: 1.2rem; 
+    color: var(--primary-color); 
+    width: 25px; 
+}
+
+.info-item span { 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+}
+
+.info-item strong { 
+    font-size: 1rem; 
+    color: var(--text-color); 
+    font-weight: 500;
+}
+
+.loading-overlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.5); 
+  backdrop-filter: blur(2px);
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  z-index: 1000; 
+  color: var(--primary-color); 
+  font-size: 2rem;
+}
+
+@keyframes fa-spin { 
+    from { transform: rotate(0deg); } 
+    to { transform: rotate(360deg); } 
+}
+
+.fa-spin { 
+    animation: fa-spin 2s infinite linear; 
+}
+
 .action-section {
     background: var(--surface-color);
     border-radius: 16px;
@@ -209,6 +275,16 @@ a.history-item:hover {
     border: 1px solid var(--border-color);
     margin-top: 2rem;
     text-align: center;
+}
+
+.action-section h3 {
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+}
+
+.action-section p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
 }
 
 .primary-btn, .secondary-btn {
@@ -229,13 +305,79 @@ a.history-item:hover {
     margin: 0.5rem;
 }
 
-/* --- Latest Quake Card --- */
+.primary-btn:hover {
+    background-color: #0056b3; 
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    background: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+html[data-theme='dark'] .secondary-btn {
+    background: var(--surface-color); 
+    color: var(--text-color);
+}
+
+.secondary-btn:hover {
+    background: var(--primary-color);
+    color: var(--primary-text);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.generated-text-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--bg-color); 
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    opacity: 0; 
+    transform: translateY(20px); 
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out; 
+    box-shadow: 0 4px 10px var(--shadow-color); 
+}
+
+.generated-text-box.show {
+    opacity: 1; 
+    transform: translateY(0); 
+}
+
+.generated-text-box textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'monospace'; 
+    font-size: 0.9rem;
+    resize: vertical;
+    background-color: var(--surface-color); 
+    color: var(--text-color);
+    box-sizing: border-box; 
+}
+
+.output-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.feedback-msg {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
 .latest-quake-card {
     background: var(--surface-color);
     border-radius: 16px;
     padding: 1.5rem;
     border: 1px solid var(--border-color);
-    margin-top: 1rem;
+    margin-top: 1rem; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -244,15 +386,67 @@ a.history-item:hover {
     text-align: center;
 }
 
-/* --- Collapsible Segments (BAGIAN PERBAIKAN) --- */
+.latest-quake-card .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.latest-quake-card .card-magnitude {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.latest-quake-card .card-info p {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    margin-bottom: 0.2rem;
+}
+
+.latest-quake-card .card-info strong {
+    color: var(--text-color);
+}
+
+.view-detail-btn {
+    background: var(--primary-color);
+    color: var(--primary-text);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+}
+
+.view-detail-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 1rem;
+}
+
 .toggle-header {
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem 0; 
+    margin-top: 2rem; 
+    margin-bottom: 1rem; 
     border-bottom: 2px solid var(--primary-color);
     font-size: 1.8rem;
     color: var(--text-color);
@@ -269,31 +463,51 @@ a.history-item:hover {
 .collapsible-content {
     max-height: 0;
     overflow: hidden;
-    /* Ubah ke cubic-bezier untuk feel yang lebih premium */
-    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); 
-    padding: 0 0.5rem;
+    transition: max-height 0.4s ease-out; 
+    padding: 0 0.5rem; 
 }
 
 .collapsible-content.active {
-    /* Nilai ini ditingkatkan agar muat 15 item atau lebih */
     max-height: 5000px; 
-    margin-bottom: 1.5rem;
-    /* Transisi saat membuka */
-    transition: max-height 1s ease-in-out;
+    margin-bottom: 1.5rem; 
 }
 
-/* --- Responsive Adjustments --- */
+.collapsible-content .history-list,
+.collapsible-content .latest-quake-card {
+    margin-top: 0; 
+}
+
 @media (max-width: 992px) {
-  .detail-grid { grid-template-columns: 1fr; }
-  #map { height: 400px; order: -1; margin-bottom: 1.5rem; }
+  .detail-grid { 
+      grid-template-columns: 1fr; 
+  }
+  #map { 
+      height: 400px; 
+      order: -1; 
+      margin-bottom: 1.5rem; 
+  }
 }
 
 @media (max-width: 768px) {
-    .toggle-header { font-size: 1.5rem; }
+    .latest-quake-card .card-magnitude {
+        font-size: 2.8rem;
+    }
+    .toggle-header {
+        font-size: 1.5rem; 
+    }
 }
 
 @media (max-width: 576px) {
-  header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .info-grid { grid-template-columns: 1fr; }
-  .output-actions { flex-direction: column; }
-}
+  header { 
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 1rem; 
+  }
+  .info-grid { 
+      grid-template-columns: 1fr; 
+  }
+  .output-actions { 
+      flex-direction: column; 
+  }
+      }
+  
