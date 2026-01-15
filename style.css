@@ -15,7 +15,7 @@ html[data-theme='dark'] {
   --text-color: #e0e0e0;
   --text-muted: #888;
   --border-color: #333;
-  --primary-color: #7FFF00; /* Warna primary cerah untuk dark mode */
+  --primary-color: #7FFF00; 
   --primary-text: #000;
   --shadow-color: rgba(0,0,0,0.2);
 }
@@ -89,21 +89,10 @@ header .logo {
 }
 
 /* Theme Toggle specifics */
-.theme-toggle .fa-sun { 
-    display: none; 
-}
-
-.theme-toggle .fa-moon { 
-    display: block; 
-}
-
-html[data-theme='dark'] .theme-toggle .fa-sun { 
-    display: block; 
-}
-
-html[data-theme='dark'] .theme-toggle .fa-moon { 
-    display: none; 
-}
+.theme-toggle .fa-sun { display: none; }
+.theme-toggle .fa-moon { display: block; }
+html[data-theme='dark'] .theme-toggle .fa-sun { display: block; }
+html[data-theme='dark'] .theme-toggle .fa-moon { display: none; }
 
 /* --- Hero Section --- */
 .hero-section { 
@@ -133,7 +122,7 @@ html[data-theme='dark'] .theme-toggle .fa-moon {
     display: inline-block;
 }
 
-/* --- History List (used for felt and major quakes lists) --- */
+/* --- History List --- */
 .history-list { 
     display: flex; 
     flex-direction: column; 
@@ -168,20 +157,11 @@ a.history-item:hover {
     text-align: center; 
 }
 
-.history-item .details { 
-    flex-grow: 1; 
-}
+.history-item .details { flex-grow: 1; }
+.history-item .loc { font-weight: 500; }
+.history-item .time { font-size: 0.8rem; color: var(--text-muted); }
 
-.history-item .loc { 
-    font-weight: 500; 
-}
-
-.history-item .time { 
-    font-size: 0.8rem; 
-    color: var(--text-muted); 
-}
-
-/* --- Detail Page Layout (info-gempa.html) --- */
+/* --- Detail Page Layout --- */
 .detail-grid { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -212,12 +192,6 @@ a.history-item:hover {
     line-height: 1; 
 }
 
-.featured-info .location { 
-    font-size: 1.25rem; 
-    font-weight: 500; 
-    margin: 0.5rem 0; 
-}
-
 .info-grid {
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -227,56 +201,7 @@ a.history-item:hover {
     padding-top: 1.5rem;
 }
 
-.info-item { 
-    display: flex; 
-    align-items: center; 
-    gap: 0.75rem; 
-}
-
-.info-item i { 
-    font-size: 1.2rem; 
-    color: var(--primary-color); 
-    width: 25px; 
-}
-
-.info-item span { 
-    font-size: 0.9rem; 
-    color: var(--text-muted); 
-}
-
-.info-item strong { 
-    font-size: 1rem; 
-    color: var(--text-color); 
-    font-weight: 500;
-}
-
-/* --- Loading Overlay --- */
-.loading-overlay {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%;
-  background: rgba(0,0,0,0.5); 
-  backdrop-filter: blur(2px);
-  display: flex; 
-  justify-content: center; 
-  align-items: center;
-  z-index: 1000; 
-  color: var(--primary-color); 
-  font-size: 2rem;
-}
-
-@keyframes fa-spin { 
-    from { transform: rotate(0deg); } 
-    to { transform: rotate(360deg); } 
-}
-
-.fa-spin { 
-    animation: fa-spin 2s infinite linear; 
-}
-
-/* --- Action Section (Generate, Copy, Share) on Detail Page --- */
+/* --- Action Section --- */
 .action-section {
     background: var(--surface-color);
     border-radius: 16px;
@@ -284,16 +209,6 @@ a.history-item:hover {
     border: 1px solid var(--border-color);
     margin-top: 2rem;
     text-align: center;
-}
-
-.action-section h3 {
-    margin-bottom: 0.75rem;
-    color: var(--text-color);
-}
-
-.action-section p {
-    color: var(--text-muted);
-    margin-bottom: 1.5rem;
 }
 
 .primary-btn, .secondary-btn {
@@ -311,86 +226,16 @@ a.history-item:hover {
     gap: 0.75rem;
     transition: background-color 0.2s ease, transform 0.2s ease;
     text-decoration: none;
-    margin: 0.5rem; /* Tambahkan margin untuk tombol */
+    margin: 0.5rem;
 }
 
-.primary-btn:hover {
-    background-color: #0056b3; /* Warna hover lebih gelap */
-    transform: translateY(-2px);
-}
-
-.secondary-btn {
-    background: var(--surface-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-}
-
-html[data-theme='dark'] .secondary-btn {
-    background: var(--surface-color); /* Atau warna sedikit beda untuk dark mode */
-    color: var(--text-color);
-}
-
-.secondary-btn:hover {
-    background: var(--primary-color);
-    color: var(--primary-text);
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-.generated-text-box {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: var(--bg-color); /* Sedikit beda dari surface */
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    
-    /* Tambahan untuk Animasi */
-    opacity: 0; /* Awalnya transparan */
-    transform: translateY(20px); /* Awalnya sedikit di bawah */
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Animasi fade dan slide */
-    box-shadow: 0 4px 10px var(--shadow-color); /* Tambah shadow biar makin bagus */
-}
-
-/* Class ini akan ditambahkan JS saat ingin menampilkan box */
-.generated-text-box.show {
-    opacity: 1; /* Jadi terlihat */
-    transform: translateY(0); /* Kembali ke posisi normal */
-}
-
-.generated-text-box textarea {
-    width: 100%;
-    min-height: 150px;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-family: 'monospace'; /* Font monospace biar rapi */
-    font-size: 0.9rem;
-    resize: vertical;
-    background-color: var(--surface-color); /* Sama dengan surface */
-    color: var(--text-color);
-    box-sizing: border-box; /* Pastikan padding masuk dalam lebar */
-}
-
-.output-actions {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.feedback-msg {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-/* --- Latest Quake Card (index.html) --- */
+/* --- Latest Quake Card --- */
 .latest-quake-card {
     background: var(--surface-color);
     border-radius: 16px;
     padding: 1.5rem;
     border: 1px solid var(--border-color);
-    margin-top: 1rem; /* Adjust margin if needed due to collapsible structure */
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -399,69 +244,15 @@ html[data-theme='dark'] .secondary-btn {
     text-align: center;
 }
 
-.latest-quake-card .card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.latest-quake-card .card-magnitude {
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    line-height: 1;
-}
-
-.latest-quake-card .card-info p {
-    font-size: 0.95rem;
-    color: var(--text-color);
-    margin-bottom: 0.2rem;
-}
-
-.latest-quake-card .card-info strong {
-    color: var(--text-color);
-}
-
-.view-detail-btn {
-    background: var(--primary-color);
-    color: var(--primary-text);
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    text-decoration: none;
-}
-
-.view-detail-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-/* --- Loading Text in Containers --- */
-.loading-text {
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 1rem;
-}
-
-/* --- Collapsible Segments (index.html) --- */
+/* --- Collapsible Segments (BAGIAN PERBAIKAN) --- */
 .toggle-header {
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0; /* Padding vertikal */
-    margin-top: 2rem; /* Jarak antar segmen */
-    margin-bottom: 1rem; /* Jarak ke konten di bawahnya */
+    padding: 0.75rem 0;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
     border-bottom: 2px solid var(--primary-color);
     font-size: 1.8rem;
     color: var(--text-color);
@@ -478,53 +269,31 @@ html[data-theme='dark'] .secondary-btn {
 .collapsible-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-out; /* Transisi untuk buka/tutup */
-    padding: 0 0.5rem; /* Padding horizontal untuk konten */
+    /* Ubah ke cubic-bezier untuk feel yang lebih premium */
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); 
+    padding: 0 0.5rem;
 }
 
 .collapsible-content.active {
-    max-height: 1000px; /* Nilai besar yang cukup untuk menampung konten */
-    margin-bottom: 1.5rem; /* Jarak setelah konten terbuka */
+    /* Nilai ini ditingkatkan agar muat 15 item atau lebih */
+    max-height: 5000px; 
+    margin-bottom: 1.5rem;
+    /* Transisi saat membuka */
+    transition: max-height 1s ease-in-out;
 }
-
-/* Pastikan konten di dalamnya tidak ada margin/padding yang mengganggu max-height */
-.collapsible-content .history-list,
-.collapsible-content .latest-quake-card {
-    margin-top: 0; /* Override default margin */
-}
-
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 992px) {
-  .detail-grid { 
-      grid-template-columns: 1fr; 
-  }
-  #map { 
-      height: 400px; 
-      order: -1; 
-      margin-bottom: 1.5rem; 
-  }
+  .detail-grid { grid-template-columns: 1fr; }
+  #map { height: 400px; order: -1; margin-bottom: 1.5rem; }
 }
 
 @media (max-width: 768px) {
-    .latest-quake-card .card-magnitude {
-        font-size: 2.8rem;
-    }
-    .toggle-header {
-        font-size: 1.5rem; /* Ukuran font lebih kecil di mobile */
-    }
+    .toggle-header { font-size: 1.5rem; }
 }
 
 @media (max-width: 576px) {
-  header { 
-      flex-direction: column; 
-      align-items: flex-start; 
-      gap: 1rem; 
-  }
-  .info-grid { 
-      grid-template-columns: 1fr; 
-  }
-  .output-actions { 
-      flex-direction: column; /* Tombol stack di mobile */
-  }
+  header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .info-grid { grid-template-columns: 1fr; }
+  .output-actions { flex-direction: column; }
 }
